@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kkpd-store-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: kkpd-store
+  ports:
+  - protocol: TCP
+    # port for exposing the service
+    port: 80
+    # portfor exposing the pod
+    targetPort: 80
+    # port for exposing the node
+    nodePort: 31110

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kkpd-store-deployment
+  labels:
+    app: kkpd-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kkpd-store
+  template:
+    metadata:
+      labels:
+        app: kkpd-store
+    spec:
+      containers:
+      - name: kkpd-store
+        image: kkpd-store
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80

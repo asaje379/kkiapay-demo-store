@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Vendor {
+  id       String    @id @default(cuid())
+  name     String
+  phone    String
+  articles Article[]
+}
+
+model Article {
+  id           String         @id @default(cuid())
+  label        String
+  image        String
+  amount       Float
+  vendor       Vendor         @relation(fields: [vendorId], references: [id])
+  vendorId     String
+  OrderArticle OrderArticle[]
+}
+
+enum OrderPaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+}
+
+model Order {
+  id                  String             @id @default(cuid())
+  totalAmount         Float
+  articles            OrderArticle[]
+  paymentStatus       OrderPaymentStatus @default(UNPAID)
+  vendorPaymentStatus OrderPaymentStatus @default(UNPAID)
+}
+
+model OrderArticle {
+  id String @id @default(cuid())
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String
+
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId String
+
+  quantity Float
+}
+
+enum TransactionStatus {
+  SUCCESS
+  FAILED
+}
+
+model Transaction {
+  id            Int               @id @default(autoincrement())
+  transactionId String
+  status        TransactionStatus
+  amount        Float
+  fees          Int               @default(0)
+  type          String?
+  method        String?
+  provider      String?
+  customerName  String?
+  customerEmail String?
+  customerPhone String?
+  paymentDate   DateTime
+  service       String?
+  partnerId     String?
+  paymentLink   String?
+  stateData     String?
+}
